@@ -7,7 +7,7 @@ MAVPACKED(
 typedef struct __mavlink_riot_cmd_long_t {
  uint8_t target_system; /*<  System ID of target system this message is for.*/
  uint8_t target_component; /*<  Component ID of target Rapid IoT this message is for.*/
- uint8_t cmd_id; /*<  RIOT Command ID.*/
+ uint8_t cmd_id; /*<  RIOT Long Command ID.*/
  uint8_t data[44]; /*<  RIOT Command related data such as an A100x Challenge value.*/
 }) mavlink_riot_cmd_long_t;
 
@@ -52,7 +52,7 @@ typedef struct __mavlink_riot_cmd_long_t {
  *
  * @param target_system  System ID of target system this message is for.
  * @param target_component  Component ID of target Rapid IoT this message is for.
- * @param cmd_id  RIOT Command ID.
+ * @param cmd_id  RIOT Long Command ID.
  * @param data  RIOT Command related data such as an A100x Challenge value.
  * @return length of the message in bytes (excluding serial stream start sign)
  */
@@ -87,7 +87,7 @@ static inline uint16_t mavlink_msg_riot_cmd_long_pack(uint8_t system_id, uint8_t
  * @param msg The MAVLink message to compress the data into
  * @param target_system  System ID of target system this message is for.
  * @param target_component  Component ID of target Rapid IoT this message is for.
- * @param cmd_id  RIOT Command ID.
+ * @param cmd_id  RIOT Long Command ID.
  * @param data  RIOT Command related data such as an A100x Challenge value.
  * @return length of the message in bytes (excluding serial stream start sign)
  */
@@ -148,7 +148,7 @@ static inline uint16_t mavlink_msg_riot_cmd_long_encode_chan(uint8_t system_id, 
  *
  * @param target_system  System ID of target system this message is for.
  * @param target_component  Component ID of target Rapid IoT this message is for.
- * @param cmd_id  RIOT Command ID.
+ * @param cmd_id  RIOT Long Command ID.
  * @param data  RIOT Command related data such as an A100x Challenge value.
  */
 #ifdef MAVLINK_USE_CONVENIENCE_FUNCTIONS
@@ -242,7 +242,7 @@ static inline uint8_t mavlink_msg_riot_cmd_long_get_target_component(const mavli
 /**
  * @brief Get field cmd_id from riot_cmd_long message
  *
- * @return  RIOT Command ID.
+ * @return  RIOT Long Command ID.
  */
 static inline uint8_t mavlink_msg_riot_cmd_long_get_cmd_id(const mavlink_message_t* msg)
 {

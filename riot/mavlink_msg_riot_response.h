@@ -1,37 +1,33 @@
 #pragma once
 // MESSAGE RIOT_RESPONSE PACKING
 
-#define MAVLINK_MSG_ID_RIOT_RESPONSE 1005
+#define MAVLINK_MSG_ID_RIOT_RESPONSE 1010
 
 MAVPACKED(
 typedef struct __mavlink_riot_response_t {
  float humidity; /*<  Floating point value for humidity sensor data.*/
  float temperature; /*<  Floating point value for temperature sensor data.*/
- int16_t air_quality; /*<  Signed integer value for air quality sensor data.*/
- uint8_t src_system; /*<  System ID of Rapid IoT component this response is from.*/
- uint8_t src_component; /*<  Component ID of Rapid IoT component this response is from.*/
- uint8_t cmd_id; /*<  RIOT Command ID the response is for.*/
+ uint16_t air_quality; /*<  Unsigned integer value for air quality sensor data. Value typically between 400 and 8000.*/
+ uint8_t cmd_id; /*<  RIOT Short Command ID the response is for.*/
 }) mavlink_riot_response_t;
 
-#define MAVLINK_MSG_ID_RIOT_RESPONSE_LEN 13
-#define MAVLINK_MSG_ID_RIOT_RESPONSE_MIN_LEN 13
-#define MAVLINK_MSG_ID_1005_LEN 13
-#define MAVLINK_MSG_ID_1005_MIN_LEN 13
+#define MAVLINK_MSG_ID_RIOT_RESPONSE_LEN 11
+#define MAVLINK_MSG_ID_RIOT_RESPONSE_MIN_LEN 11
+#define MAVLINK_MSG_ID_1010_LEN 11
+#define MAVLINK_MSG_ID_1010_MIN_LEN 11
 
-#define MAVLINK_MSG_ID_RIOT_RESPONSE_CRC 77
-#define MAVLINK_MSG_ID_1005_CRC 77
+#define MAVLINK_MSG_ID_RIOT_RESPONSE_CRC 62
+#define MAVLINK_MSG_ID_1010_CRC 62
 
 
 
 #if MAVLINK_COMMAND_24BIT
 #define MAVLINK_MESSAGE_INFO_RIOT_RESPONSE { \
-    1005, \
+    1010, \
     "RIOT_RESPONSE", \
-    6, \
-    {  { "src_system", NULL, MAVLINK_TYPE_UINT8_T, 0, 10, offsetof(mavlink_riot_response_t, src_system) }, \
-         { "src_component", NULL, MAVLINK_TYPE_UINT8_T, 0, 11, offsetof(mavlink_riot_response_t, src_component) }, \
-         { "cmd_id", NULL, MAVLINK_TYPE_UINT8_T, 0, 12, offsetof(mavlink_riot_response_t, cmd_id) }, \
-         { "air_quality", NULL, MAVLINK_TYPE_INT16_T, 0, 8, offsetof(mavlink_riot_response_t, air_quality) }, \
+    4, \
+    {  { "cmd_id", NULL, MAVLINK_TYPE_UINT8_T, 0, 10, offsetof(mavlink_riot_response_t, cmd_id) }, \
+         { "air_quality", NULL, MAVLINK_TYPE_UINT16_T, 0, 8, offsetof(mavlink_riot_response_t, air_quality) }, \
          { "humidity", NULL, MAVLINK_TYPE_FLOAT, 0, 0, offsetof(mavlink_riot_response_t, humidity) }, \
          { "temperature", NULL, MAVLINK_TYPE_FLOAT, 0, 4, offsetof(mavlink_riot_response_t, temperature) }, \
          } \
@@ -39,11 +35,9 @@ typedef struct __mavlink_riot_response_t {
 #else
 #define MAVLINK_MESSAGE_INFO_RIOT_RESPONSE { \
     "RIOT_RESPONSE", \
-    6, \
-    {  { "src_system", NULL, MAVLINK_TYPE_UINT8_T, 0, 10, offsetof(mavlink_riot_response_t, src_system) }, \
-         { "src_component", NULL, MAVLINK_TYPE_UINT8_T, 0, 11, offsetof(mavlink_riot_response_t, src_component) }, \
-         { "cmd_id", NULL, MAVLINK_TYPE_UINT8_T, 0, 12, offsetof(mavlink_riot_response_t, cmd_id) }, \
-         { "air_quality", NULL, MAVLINK_TYPE_INT16_T, 0, 8, offsetof(mavlink_riot_response_t, air_quality) }, \
+    4, \
+    {  { "cmd_id", NULL, MAVLINK_TYPE_UINT8_T, 0, 10, offsetof(mavlink_riot_response_t, cmd_id) }, \
+         { "air_quality", NULL, MAVLINK_TYPE_UINT16_T, 0, 8, offsetof(mavlink_riot_response_t, air_quality) }, \
          { "humidity", NULL, MAVLINK_TYPE_FLOAT, 0, 0, offsetof(mavlink_riot_response_t, humidity) }, \
          { "temperature", NULL, MAVLINK_TYPE_FLOAT, 0, 4, offsetof(mavlink_riot_response_t, temperature) }, \
          } \
@@ -56,25 +50,21 @@ typedef struct __mavlink_riot_response_t {
  * @param component_id ID of this component (e.g. 200 for IMU)
  * @param msg The MAVLink message to compress the data into
  *
- * @param src_system  System ID of Rapid IoT component this response is from.
- * @param src_component  Component ID of Rapid IoT component this response is from.
- * @param cmd_id  RIOT Command ID the response is for.
- * @param air_quality  Signed integer value for air quality sensor data.
+ * @param cmd_id  RIOT Short Command ID the response is for.
+ * @param air_quality  Unsigned integer value for air quality sensor data. Value typically between 400 and 8000.
  * @param humidity  Floating point value for humidity sensor data.
  * @param temperature  Floating point value for temperature sensor data.
  * @return length of the message in bytes (excluding serial stream start sign)
  */
 static inline uint16_t mavlink_msg_riot_response_pack(uint8_t system_id, uint8_t component_id, mavlink_message_t* msg,
-                               uint8_t src_system, uint8_t src_component, uint8_t cmd_id, int16_t air_quality, float humidity, float temperature)
+                               uint8_t cmd_id, uint16_t air_quality, float humidity, float temperature)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
     char buf[MAVLINK_MSG_ID_RIOT_RESPONSE_LEN];
     _mav_put_float(buf, 0, humidity);
     _mav_put_float(buf, 4, temperature);
-    _mav_put_int16_t(buf, 8, air_quality);
-    _mav_put_uint8_t(buf, 10, src_system);
-    _mav_put_uint8_t(buf, 11, src_component);
-    _mav_put_uint8_t(buf, 12, cmd_id);
+    _mav_put_uint16_t(buf, 8, air_quality);
+    _mav_put_uint8_t(buf, 10, cmd_id);
 
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, MAVLINK_MSG_ID_RIOT_RESPONSE_LEN);
 #else
@@ -82,8 +72,6 @@ static inline uint16_t mavlink_msg_riot_response_pack(uint8_t system_id, uint8_t
     packet.humidity = humidity;
     packet.temperature = temperature;
     packet.air_quality = air_quality;
-    packet.src_system = src_system;
-    packet.src_component = src_component;
     packet.cmd_id = cmd_id;
 
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), &packet, MAVLINK_MSG_ID_RIOT_RESPONSE_LEN);
@@ -99,26 +87,22 @@ static inline uint16_t mavlink_msg_riot_response_pack(uint8_t system_id, uint8_t
  * @param component_id ID of this component (e.g. 200 for IMU)
  * @param chan The MAVLink channel this message will be sent over
  * @param msg The MAVLink message to compress the data into
- * @param src_system  System ID of Rapid IoT component this response is from.
- * @param src_component  Component ID of Rapid IoT component this response is from.
- * @param cmd_id  RIOT Command ID the response is for.
- * @param air_quality  Signed integer value for air quality sensor data.
+ * @param cmd_id  RIOT Short Command ID the response is for.
+ * @param air_quality  Unsigned integer value for air quality sensor data. Value typically between 400 and 8000.
  * @param humidity  Floating point value for humidity sensor data.
  * @param temperature  Floating point value for temperature sensor data.
  * @return length of the message in bytes (excluding serial stream start sign)
  */
 static inline uint16_t mavlink_msg_riot_response_pack_chan(uint8_t system_id, uint8_t component_id, uint8_t chan,
                                mavlink_message_t* msg,
-                                   uint8_t src_system,uint8_t src_component,uint8_t cmd_id,int16_t air_quality,float humidity,float temperature)
+                                   uint8_t cmd_id,uint16_t air_quality,float humidity,float temperature)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
     char buf[MAVLINK_MSG_ID_RIOT_RESPONSE_LEN];
     _mav_put_float(buf, 0, humidity);
     _mav_put_float(buf, 4, temperature);
-    _mav_put_int16_t(buf, 8, air_quality);
-    _mav_put_uint8_t(buf, 10, src_system);
-    _mav_put_uint8_t(buf, 11, src_component);
-    _mav_put_uint8_t(buf, 12, cmd_id);
+    _mav_put_uint16_t(buf, 8, air_quality);
+    _mav_put_uint8_t(buf, 10, cmd_id);
 
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, MAVLINK_MSG_ID_RIOT_RESPONSE_LEN);
 #else
@@ -126,8 +110,6 @@ static inline uint16_t mavlink_msg_riot_response_pack_chan(uint8_t system_id, ui
     packet.humidity = humidity;
     packet.temperature = temperature;
     packet.air_quality = air_quality;
-    packet.src_system = src_system;
-    packet.src_component = src_component;
     packet.cmd_id = cmd_id;
 
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), &packet, MAVLINK_MSG_ID_RIOT_RESPONSE_LEN);
@@ -147,7 +129,7 @@ static inline uint16_t mavlink_msg_riot_response_pack_chan(uint8_t system_id, ui
  */
 static inline uint16_t mavlink_msg_riot_response_encode(uint8_t system_id, uint8_t component_id, mavlink_message_t* msg, const mavlink_riot_response_t* riot_response)
 {
-    return mavlink_msg_riot_response_pack(system_id, component_id, msg, riot_response->src_system, riot_response->src_component, riot_response->cmd_id, riot_response->air_quality, riot_response->humidity, riot_response->temperature);
+    return mavlink_msg_riot_response_pack(system_id, component_id, msg, riot_response->cmd_id, riot_response->air_quality, riot_response->humidity, riot_response->temperature);
 }
 
 /**
@@ -161,32 +143,28 @@ static inline uint16_t mavlink_msg_riot_response_encode(uint8_t system_id, uint8
  */
 static inline uint16_t mavlink_msg_riot_response_encode_chan(uint8_t system_id, uint8_t component_id, uint8_t chan, mavlink_message_t* msg, const mavlink_riot_response_t* riot_response)
 {
-    return mavlink_msg_riot_response_pack_chan(system_id, component_id, chan, msg, riot_response->src_system, riot_response->src_component, riot_response->cmd_id, riot_response->air_quality, riot_response->humidity, riot_response->temperature);
+    return mavlink_msg_riot_response_pack_chan(system_id, component_id, chan, msg, riot_response->cmd_id, riot_response->air_quality, riot_response->humidity, riot_response->temperature);
 }
 
 /**
  * @brief Send a riot_response message
  * @param chan MAVLink channel to send the message
  *
- * @param src_system  System ID of Rapid IoT component this response is from.
- * @param src_component  Component ID of Rapid IoT component this response is from.
- * @param cmd_id  RIOT Command ID the response is for.
- * @param air_quality  Signed integer value for air quality sensor data.
+ * @param cmd_id  RIOT Short Command ID the response is for.
+ * @param air_quality  Unsigned integer value for air quality sensor data. Value typically between 400 and 8000.
  * @param humidity  Floating point value for humidity sensor data.
  * @param temperature  Floating point value for temperature sensor data.
  */
 #ifdef MAVLINK_USE_CONVENIENCE_FUNCTIONS
 
-static inline void mavlink_msg_riot_response_send(mavlink_channel_t chan, uint8_t src_system, uint8_t src_component, uint8_t cmd_id, int16_t air_quality, float humidity, float temperature)
+static inline void mavlink_msg_riot_response_send(mavlink_channel_t chan, uint8_t cmd_id, uint16_t air_quality, float humidity, float temperature)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
     char buf[MAVLINK_MSG_ID_RIOT_RESPONSE_LEN];
     _mav_put_float(buf, 0, humidity);
     _mav_put_float(buf, 4, temperature);
-    _mav_put_int16_t(buf, 8, air_quality);
-    _mav_put_uint8_t(buf, 10, src_system);
-    _mav_put_uint8_t(buf, 11, src_component);
-    _mav_put_uint8_t(buf, 12, cmd_id);
+    _mav_put_uint16_t(buf, 8, air_quality);
+    _mav_put_uint8_t(buf, 10, cmd_id);
 
     _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_RIOT_RESPONSE, buf, MAVLINK_MSG_ID_RIOT_RESPONSE_MIN_LEN, MAVLINK_MSG_ID_RIOT_RESPONSE_LEN, MAVLINK_MSG_ID_RIOT_RESPONSE_CRC);
 #else
@@ -194,8 +172,6 @@ static inline void mavlink_msg_riot_response_send(mavlink_channel_t chan, uint8_
     packet.humidity = humidity;
     packet.temperature = temperature;
     packet.air_quality = air_quality;
-    packet.src_system = src_system;
-    packet.src_component = src_component;
     packet.cmd_id = cmd_id;
 
     _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_RIOT_RESPONSE, (const char *)&packet, MAVLINK_MSG_ID_RIOT_RESPONSE_MIN_LEN, MAVLINK_MSG_ID_RIOT_RESPONSE_LEN, MAVLINK_MSG_ID_RIOT_RESPONSE_CRC);
@@ -210,7 +186,7 @@ static inline void mavlink_msg_riot_response_send(mavlink_channel_t chan, uint8_
 static inline void mavlink_msg_riot_response_send_struct(mavlink_channel_t chan, const mavlink_riot_response_t* riot_response)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
-    mavlink_msg_riot_response_send(chan, riot_response->src_system, riot_response->src_component, riot_response->cmd_id, riot_response->air_quality, riot_response->humidity, riot_response->temperature);
+    mavlink_msg_riot_response_send(chan, riot_response->cmd_id, riot_response->air_quality, riot_response->humidity, riot_response->temperature);
 #else
     _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_RIOT_RESPONSE, (const char *)riot_response, MAVLINK_MSG_ID_RIOT_RESPONSE_MIN_LEN, MAVLINK_MSG_ID_RIOT_RESPONSE_LEN, MAVLINK_MSG_ID_RIOT_RESPONSE_CRC);
 #endif
@@ -224,16 +200,14 @@ static inline void mavlink_msg_riot_response_send_struct(mavlink_channel_t chan,
   is usually the receive buffer for the channel, and allows a reply to an
   incoming message with minimum stack space usage.
  */
-static inline void mavlink_msg_riot_response_send_buf(mavlink_message_t *msgbuf, mavlink_channel_t chan,  uint8_t src_system, uint8_t src_component, uint8_t cmd_id, int16_t air_quality, float humidity, float temperature)
+static inline void mavlink_msg_riot_response_send_buf(mavlink_message_t *msgbuf, mavlink_channel_t chan,  uint8_t cmd_id, uint16_t air_quality, float humidity, float temperature)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
     char *buf = (char *)msgbuf;
     _mav_put_float(buf, 0, humidity);
     _mav_put_float(buf, 4, temperature);
-    _mav_put_int16_t(buf, 8, air_quality);
-    _mav_put_uint8_t(buf, 10, src_system);
-    _mav_put_uint8_t(buf, 11, src_component);
-    _mav_put_uint8_t(buf, 12, cmd_id);
+    _mav_put_uint16_t(buf, 8, air_quality);
+    _mav_put_uint8_t(buf, 10, cmd_id);
 
     _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_RIOT_RESPONSE, buf, MAVLINK_MSG_ID_RIOT_RESPONSE_MIN_LEN, MAVLINK_MSG_ID_RIOT_RESPONSE_LEN, MAVLINK_MSG_ID_RIOT_RESPONSE_CRC);
 #else
@@ -241,8 +215,6 @@ static inline void mavlink_msg_riot_response_send_buf(mavlink_message_t *msgbuf,
     packet->humidity = humidity;
     packet->temperature = temperature;
     packet->air_quality = air_quality;
-    packet->src_system = src_system;
-    packet->src_component = src_component;
     packet->cmd_id = cmd_id;
 
     _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_RIOT_RESPONSE, (const char *)packet, MAVLINK_MSG_ID_RIOT_RESPONSE_MIN_LEN, MAVLINK_MSG_ID_RIOT_RESPONSE_LEN, MAVLINK_MSG_ID_RIOT_RESPONSE_CRC);
@@ -256,43 +228,23 @@ static inline void mavlink_msg_riot_response_send_buf(mavlink_message_t *msgbuf,
 
 
 /**
- * @brief Get field src_system from riot_response message
+ * @brief Get field cmd_id from riot_response message
  *
- * @return  System ID of Rapid IoT component this response is from.
+ * @return  RIOT Short Command ID the response is for.
  */
-static inline uint8_t mavlink_msg_riot_response_get_src_system(const mavlink_message_t* msg)
+static inline uint8_t mavlink_msg_riot_response_get_cmd_id(const mavlink_message_t* msg)
 {
     return _MAV_RETURN_uint8_t(msg,  10);
 }
 
 /**
- * @brief Get field src_component from riot_response message
- *
- * @return  Component ID of Rapid IoT component this response is from.
- */
-static inline uint8_t mavlink_msg_riot_response_get_src_component(const mavlink_message_t* msg)
-{
-    return _MAV_RETURN_uint8_t(msg,  11);
-}
-
-/**
- * @brief Get field cmd_id from riot_response message
- *
- * @return  RIOT Command ID the response is for.
- */
-static inline uint8_t mavlink_msg_riot_response_get_cmd_id(const mavlink_message_t* msg)
-{
-    return _MAV_RETURN_uint8_t(msg,  12);
-}
-
-/**
  * @brief Get field air_quality from riot_response message
  *
- * @return  Signed integer value for air quality sensor data.
+ * @return  Unsigned integer value for air quality sensor data. Value typically between 400 and 8000.
  */
-static inline int16_t mavlink_msg_riot_response_get_air_quality(const mavlink_message_t* msg)
+static inline uint16_t mavlink_msg_riot_response_get_air_quality(const mavlink_message_t* msg)
 {
-    return _MAV_RETURN_int16_t(msg,  8);
+    return _MAV_RETURN_uint16_t(msg,  8);
 }
 
 /**
@@ -327,8 +279,6 @@ static inline void mavlink_msg_riot_response_decode(const mavlink_message_t* msg
     riot_response->humidity = mavlink_msg_riot_response_get_humidity(msg);
     riot_response->temperature = mavlink_msg_riot_response_get_temperature(msg);
     riot_response->air_quality = mavlink_msg_riot_response_get_air_quality(msg);
-    riot_response->src_system = mavlink_msg_riot_response_get_src_system(msg);
-    riot_response->src_component = mavlink_msg_riot_response_get_src_component(msg);
     riot_response->cmd_id = mavlink_msg_riot_response_get_cmd_id(msg);
 #else
         uint8_t len = msg->len < MAVLINK_MSG_ID_RIOT_RESPONSE_LEN? msg->len : MAVLINK_MSG_ID_RIOT_RESPONSE_LEN;

@@ -7,33 +7,47 @@
     <dialect>8</dialect>
 
     <enums>
-        <!-- NXP Rapid IoT (RIOT) Command ID Enumeration -->
-	<enum name="RIOT_CMD_ID">
+        <!-- NXP Rapid IoT (RIOT) Short Command ID Enumeration -->
+	<enum name="RIOT_CMD_SHORT_ID">
 		<description>Type of NXP Rapid IoT parameter request.</description>
-		<entry value="0" name="RIOT_CMD_RQST_AIR_QUALITY">
+		<entry value="0" name="RIOT_CMD_SHORT_RQST_AIR_QUALITY">
 		<description>RIOT CMD to retrieve Air Quality.</description>
 		</entry>
-		<entry value="1" name="RIOT_CMD_RQST_HUMIDITY">
+		<entry value="1" name="RIOT_CMD_SHORT_RQST_HUMIDITY">
 		<description>RIOT CMD to retrieve Humidity.</description>
 		</entry>
-		<entry value="2" name="RIOT_CMD_RQST_TEMPERATURE">
+		<entry value="2" name="RIOT_CMD_SHORT_RQST_TEMPERATURE">
 		<description>RIOT CMD to retrieve on-board sensor's temperature.</description>
 		</entry>
-		<entry value="3" name="RIOT_CMD_RQST_SENSOR_COMBINED">
+		<entry value="3" name="RIOT_CMD_SHORT_RQST_SENSOR_COMBINED">
 		<description>RIOT CMD to retrieve on-board sensor data combined.</description>
 		</entry>
-		<entry value="20" name="RIOT_CMD_A100X_GETUID">
+	</enum>
+
+        <!-- NXP Rapid IoT (RIOT) Long Command ID Enumeration -->
+	<enum name="RIOT_CMD_LONG_ID">
+		<description>Type of NXP Rapid IoT parameter request.</description>
+		<entry value="0" name="RIOT_CMD_LONG_A100X_GETUID">
 		<description>RIOT CMD to retrieve on-board A1006 Secure Authenticator's stored UID.</description>
 		</entry>
-		<entry value="21" name="RIOT_CMD_A100X_GETCERTIFICATE">
+		<entry value="1" name="RIOT_CMD_LONG_A100X_GETCERTIFICATE">
 		<description>RIOT CMD to retrieve on-board A1006 Secure Authenticator's stored UID. Use param_index to choose between NXP / User certificate.</description>
 		</entry>
 		<!-- ECCAuthenticate consists of a SetChallenge + GetChallenge combo. IC ECC computation is expected to take 35ms. -->
-		<entry value="22" name="RIOT_CMD_A100X_SETCHALLENGE">
+		<entry value="2" name="RIOT_CMD_LONG_A100X_SETCHALLENGE">
 		<description>RIOT CMD to send a challenge to the on-board A1006 Secure Authenticator. This is the first step in the ECCAuthenticate process.</description>
 		</entry>
-		<entry value="23" name="RIOT_CMD_A100X_GETCHALLENGE">
+		<entry value="3" name="RIOT_CMD_LONG_A100X_GETCHALLENGE">
 		<description>RIOT CMD to request a challenge response from the on-board A1006 Secure Authenticator. This is the second step in the ECCAuthenticate.</description>
+		</entry>
+		<entry value="10" name="RIOT_CMD_LONG_SET_AIR_QUALITY_OFFSET">
+		<description>RIOT CMD to update the on-board air-quality sensor calibration offset, an int16_t in little endian placed in 'data'.</description>
+		</entry>
+		<entry value="11" name="RIOT_CMD_LONG_SET_HUMIDITY_OFFSET">
+		<description>RIOT CMD to update the on-board humidity sensor calibration offset, a float32_t in little endian placed in 'data'.</description>
+		</entry>
+		<entry value="12" name="RIOT_CMD_LONG_SET_TEMPERATURE_OFFSET">
+		<description>RIOT CMD to update the on-board temperature sensor calibration offset, a float32_t in little endian placed in 'data'.</description>
 		</entry>
 	</enum>
     </enums>
@@ -46,7 +60,7 @@
 		<description>Send commands towards NXP's Rapid IoT module. </description>
 		<field type="uint8_t" name="target_system">System ID of target system this message is for.</field>
 		<field type="uint8_t" name="target_component">Component ID of target Rapid IoT this message is for.</field>
-		<field type="uint8_t" name="cmd_id" enum="RIOT_CMD_ID">RIOT Command ID.</field>
+		<field type="uint8_t" name="cmd_id" enum="RIOT_CMD_SHORT_ID">RIOT Short Command ID.</field>
     	</message>
 
  	<message id="1001" name="RIOT_CMD_LONG">
@@ -55,29 +69,25 @@
 		<description>Send commands towards NXP's Rapid IoT module. </description>
 		<field type="uint8_t" name="target_system">System ID of target system this message is for.</field>
 		<field type="uint8_t" name="target_component">Component ID of target Rapid IoT this message is for.</field>
-		<field type="uint8_t" name="cmd_id" enum="RIOT_CMD_ID">RIOT Command ID.</field>
+		<field type="uint8_t" name="cmd_id" enum="RIOT_CMD_LONG_ID">RIOT Long Command ID.</field>
 		<field type="uint8_t[44]" name="data">RIOT Command related data such as an A100x Challenge value.</field>
     	</message>
 
- 	<message id="1005" name="RIOT_RESPONSE">
+ 	<message id="1010" name="RIOT_RESPONSE">
 		<wip/>
       		<!-- This message is work-in-progress and it can therefore change. It should NOT be used in stable production environments. -->
 		<description>Response sent by NXP's Rapid IoT module. Designed to fit combined sensor data of air-quality, humidity and temperature.</description>
-		<field type="uint8_t" name="src_system">System ID of Rapid IoT component this response is from.</field>
-		<field type="uint8_t" name="src_component">Component ID of Rapid IoT component this response is from.</field>
-		<field type="uint8_t" name="cmd_id" enum="RIOT_CMD_ID">RIOT Command ID the response is for.</field>
-		<field type="int16_t" name="air_quality">Signed integer value for air quality sensor data.</field>
+		<field type="uint8_t" name="cmd_id" enum="RIOT_CMD_SHORT_ID">RIOT Short Command ID the response is for.</field>
+		<field type="uint16_t" name="air_quality">Unsigned integer value for air quality sensor data. Value typically between 400 and 8000.</field>
 		<field type="float" name="humidity">Floating point value for humidity sensor data.</field>
 		<field type="float" name="temperature">Floating point value for temperature sensor data.</field>
     	</message>
 
- 	<message id="1006" name="RIOT_RESPONSE_LONG">
+ 	<message id="1011" name="RIOT_RESPONSE_LONG">
 		<wip/>
       		<!-- This message is work-in-progress and it can therefore change. It should NOT be used in stable production environments. -->
 		<description>Response sent by NXP's Rapid IoT module for long replies containing e.g. an A100x Certificate, Challenge or UID.</description>
-		<field type="uint8_t" name="src_system">System ID of Rapid IoT component this response is from.</field>
-		<field type="uint8_t" name="src_component">Component ID of Rapid IoT component this response is from.</field>
-		<field type="uint8_t" name="cmd_id" enum="RIOT_CMD_ID">RIOT Command ID the response is for.</field>
+		<field type="uint8_t" name="cmd_id" enum="RIOT_CMD_LONG_ID">RIOT Long Command ID the response is for.</field>
 		<field type="uint8_t[128]" name="data">Data array of size 128 bytes to allow for returning bigger data such as the A100x Certificate.</field>
     	</message>
     </messages>

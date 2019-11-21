@@ -1,45 +1,39 @@
 #pragma once
 // MESSAGE RIOT_RESPONSE_LONG PACKING
 
-#define MAVLINK_MSG_ID_RIOT_RESPONSE_LONG 1006
+#define MAVLINK_MSG_ID_RIOT_RESPONSE_LONG 1011
 
 MAVPACKED(
 typedef struct __mavlink_riot_response_long_t {
- uint8_t src_system; /*<  System ID of Rapid IoT component this response is from.*/
- uint8_t src_component; /*<  Component ID of Rapid IoT component this response is from.*/
- uint8_t cmd_id; /*<  RIOT Command ID the response is for.*/
+ uint8_t cmd_id; /*<  RIOT Long Command ID the response is for.*/
  uint8_t data[128]; /*<  Data array of size 128 bytes to allow for returning bigger data such as the A100x Certificate.*/
 }) mavlink_riot_response_long_t;
 
-#define MAVLINK_MSG_ID_RIOT_RESPONSE_LONG_LEN 131
-#define MAVLINK_MSG_ID_RIOT_RESPONSE_LONG_MIN_LEN 131
-#define MAVLINK_MSG_ID_1006_LEN 131
-#define MAVLINK_MSG_ID_1006_MIN_LEN 131
+#define MAVLINK_MSG_ID_RIOT_RESPONSE_LONG_LEN 129
+#define MAVLINK_MSG_ID_RIOT_RESPONSE_LONG_MIN_LEN 129
+#define MAVLINK_MSG_ID_1011_LEN 129
+#define MAVLINK_MSG_ID_1011_MIN_LEN 129
 
-#define MAVLINK_MSG_ID_RIOT_RESPONSE_LONG_CRC 235
-#define MAVLINK_MSG_ID_1006_CRC 235
+#define MAVLINK_MSG_ID_RIOT_RESPONSE_LONG_CRC 165
+#define MAVLINK_MSG_ID_1011_CRC 165
 
 #define MAVLINK_MSG_RIOT_RESPONSE_LONG_FIELD_DATA_LEN 128
 
 #if MAVLINK_COMMAND_24BIT
 #define MAVLINK_MESSAGE_INFO_RIOT_RESPONSE_LONG { \
-    1006, \
+    1011, \
     "RIOT_RESPONSE_LONG", \
-    4, \
-    {  { "src_system", NULL, MAVLINK_TYPE_UINT8_T, 0, 0, offsetof(mavlink_riot_response_long_t, src_system) }, \
-         { "src_component", NULL, MAVLINK_TYPE_UINT8_T, 0, 1, offsetof(mavlink_riot_response_long_t, src_component) }, \
-         { "cmd_id", NULL, MAVLINK_TYPE_UINT8_T, 0, 2, offsetof(mavlink_riot_response_long_t, cmd_id) }, \
-         { "data", NULL, MAVLINK_TYPE_UINT8_T, 128, 3, offsetof(mavlink_riot_response_long_t, data) }, \
+    2, \
+    {  { "cmd_id", NULL, MAVLINK_TYPE_UINT8_T, 0, 0, offsetof(mavlink_riot_response_long_t, cmd_id) }, \
+         { "data", NULL, MAVLINK_TYPE_UINT8_T, 128, 1, offsetof(mavlink_riot_response_long_t, data) }, \
          } \
 }
 #else
 #define MAVLINK_MESSAGE_INFO_RIOT_RESPONSE_LONG { \
     "RIOT_RESPONSE_LONG", \
-    4, \
-    {  { "src_system", NULL, MAVLINK_TYPE_UINT8_T, 0, 0, offsetof(mavlink_riot_response_long_t, src_system) }, \
-         { "src_component", NULL, MAVLINK_TYPE_UINT8_T, 0, 1, offsetof(mavlink_riot_response_long_t, src_component) }, \
-         { "cmd_id", NULL, MAVLINK_TYPE_UINT8_T, 0, 2, offsetof(mavlink_riot_response_long_t, cmd_id) }, \
-         { "data", NULL, MAVLINK_TYPE_UINT8_T, 128, 3, offsetof(mavlink_riot_response_long_t, data) }, \
+    2, \
+    {  { "cmd_id", NULL, MAVLINK_TYPE_UINT8_T, 0, 0, offsetof(mavlink_riot_response_long_t, cmd_id) }, \
+         { "data", NULL, MAVLINK_TYPE_UINT8_T, 128, 1, offsetof(mavlink_riot_response_long_t, data) }, \
          } \
 }
 #endif
@@ -50,26 +44,20 @@ typedef struct __mavlink_riot_response_long_t {
  * @param component_id ID of this component (e.g. 200 for IMU)
  * @param msg The MAVLink message to compress the data into
  *
- * @param src_system  System ID of Rapid IoT component this response is from.
- * @param src_component  Component ID of Rapid IoT component this response is from.
- * @param cmd_id  RIOT Command ID the response is for.
+ * @param cmd_id  RIOT Long Command ID the response is for.
  * @param data  Data array of size 128 bytes to allow for returning bigger data such as the A100x Certificate.
  * @return length of the message in bytes (excluding serial stream start sign)
  */
 static inline uint16_t mavlink_msg_riot_response_long_pack(uint8_t system_id, uint8_t component_id, mavlink_message_t* msg,
-                               uint8_t src_system, uint8_t src_component, uint8_t cmd_id, const uint8_t *data)
+                               uint8_t cmd_id, const uint8_t *data)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
     char buf[MAVLINK_MSG_ID_RIOT_RESPONSE_LONG_LEN];
-    _mav_put_uint8_t(buf, 0, src_system);
-    _mav_put_uint8_t(buf, 1, src_component);
-    _mav_put_uint8_t(buf, 2, cmd_id);
-    _mav_put_uint8_t_array(buf, 3, data, 128);
+    _mav_put_uint8_t(buf, 0, cmd_id);
+    _mav_put_uint8_t_array(buf, 1, data, 128);
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, MAVLINK_MSG_ID_RIOT_RESPONSE_LONG_LEN);
 #else
     mavlink_riot_response_long_t packet;
-    packet.src_system = src_system;
-    packet.src_component = src_component;
     packet.cmd_id = cmd_id;
     mav_array_memcpy(packet.data, data, sizeof(uint8_t)*128);
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), &packet, MAVLINK_MSG_ID_RIOT_RESPONSE_LONG_LEN);
@@ -85,27 +73,21 @@ static inline uint16_t mavlink_msg_riot_response_long_pack(uint8_t system_id, ui
  * @param component_id ID of this component (e.g. 200 for IMU)
  * @param chan The MAVLink channel this message will be sent over
  * @param msg The MAVLink message to compress the data into
- * @param src_system  System ID of Rapid IoT component this response is from.
- * @param src_component  Component ID of Rapid IoT component this response is from.
- * @param cmd_id  RIOT Command ID the response is for.
+ * @param cmd_id  RIOT Long Command ID the response is for.
  * @param data  Data array of size 128 bytes to allow for returning bigger data such as the A100x Certificate.
  * @return length of the message in bytes (excluding serial stream start sign)
  */
 static inline uint16_t mavlink_msg_riot_response_long_pack_chan(uint8_t system_id, uint8_t component_id, uint8_t chan,
                                mavlink_message_t* msg,
-                                   uint8_t src_system,uint8_t src_component,uint8_t cmd_id,const uint8_t *data)
+                                   uint8_t cmd_id,const uint8_t *data)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
     char buf[MAVLINK_MSG_ID_RIOT_RESPONSE_LONG_LEN];
-    _mav_put_uint8_t(buf, 0, src_system);
-    _mav_put_uint8_t(buf, 1, src_component);
-    _mav_put_uint8_t(buf, 2, cmd_id);
-    _mav_put_uint8_t_array(buf, 3, data, 128);
+    _mav_put_uint8_t(buf, 0, cmd_id);
+    _mav_put_uint8_t_array(buf, 1, data, 128);
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, MAVLINK_MSG_ID_RIOT_RESPONSE_LONG_LEN);
 #else
     mavlink_riot_response_long_t packet;
-    packet.src_system = src_system;
-    packet.src_component = src_component;
     packet.cmd_id = cmd_id;
     mav_array_memcpy(packet.data, data, sizeof(uint8_t)*128);
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), &packet, MAVLINK_MSG_ID_RIOT_RESPONSE_LONG_LEN);
@@ -125,7 +107,7 @@ static inline uint16_t mavlink_msg_riot_response_long_pack_chan(uint8_t system_i
  */
 static inline uint16_t mavlink_msg_riot_response_long_encode(uint8_t system_id, uint8_t component_id, mavlink_message_t* msg, const mavlink_riot_response_long_t* riot_response_long)
 {
-    return mavlink_msg_riot_response_long_pack(system_id, component_id, msg, riot_response_long->src_system, riot_response_long->src_component, riot_response_long->cmd_id, riot_response_long->data);
+    return mavlink_msg_riot_response_long_pack(system_id, component_id, msg, riot_response_long->cmd_id, riot_response_long->data);
 }
 
 /**
@@ -139,33 +121,27 @@ static inline uint16_t mavlink_msg_riot_response_long_encode(uint8_t system_id, 
  */
 static inline uint16_t mavlink_msg_riot_response_long_encode_chan(uint8_t system_id, uint8_t component_id, uint8_t chan, mavlink_message_t* msg, const mavlink_riot_response_long_t* riot_response_long)
 {
-    return mavlink_msg_riot_response_long_pack_chan(system_id, component_id, chan, msg, riot_response_long->src_system, riot_response_long->src_component, riot_response_long->cmd_id, riot_response_long->data);
+    return mavlink_msg_riot_response_long_pack_chan(system_id, component_id, chan, msg, riot_response_long->cmd_id, riot_response_long->data);
 }
 
 /**
  * @brief Send a riot_response_long message
  * @param chan MAVLink channel to send the message
  *
- * @param src_system  System ID of Rapid IoT component this response is from.
- * @param src_component  Component ID of Rapid IoT component this response is from.
- * @param cmd_id  RIOT Command ID the response is for.
+ * @param cmd_id  RIOT Long Command ID the response is for.
  * @param data  Data array of size 128 bytes to allow for returning bigger data such as the A100x Certificate.
  */
 #ifdef MAVLINK_USE_CONVENIENCE_FUNCTIONS
 
-static inline void mavlink_msg_riot_response_long_send(mavlink_channel_t chan, uint8_t src_system, uint8_t src_component, uint8_t cmd_id, const uint8_t *data)
+static inline void mavlink_msg_riot_response_long_send(mavlink_channel_t chan, uint8_t cmd_id, const uint8_t *data)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
     char buf[MAVLINK_MSG_ID_RIOT_RESPONSE_LONG_LEN];
-    _mav_put_uint8_t(buf, 0, src_system);
-    _mav_put_uint8_t(buf, 1, src_component);
-    _mav_put_uint8_t(buf, 2, cmd_id);
-    _mav_put_uint8_t_array(buf, 3, data, 128);
+    _mav_put_uint8_t(buf, 0, cmd_id);
+    _mav_put_uint8_t_array(buf, 1, data, 128);
     _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_RIOT_RESPONSE_LONG, buf, MAVLINK_MSG_ID_RIOT_RESPONSE_LONG_MIN_LEN, MAVLINK_MSG_ID_RIOT_RESPONSE_LONG_LEN, MAVLINK_MSG_ID_RIOT_RESPONSE_LONG_CRC);
 #else
     mavlink_riot_response_long_t packet;
-    packet.src_system = src_system;
-    packet.src_component = src_component;
     packet.cmd_id = cmd_id;
     mav_array_memcpy(packet.data, data, sizeof(uint8_t)*128);
     _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_RIOT_RESPONSE_LONG, (const char *)&packet, MAVLINK_MSG_ID_RIOT_RESPONSE_LONG_MIN_LEN, MAVLINK_MSG_ID_RIOT_RESPONSE_LONG_LEN, MAVLINK_MSG_ID_RIOT_RESPONSE_LONG_CRC);
@@ -180,7 +156,7 @@ static inline void mavlink_msg_riot_response_long_send(mavlink_channel_t chan, u
 static inline void mavlink_msg_riot_response_long_send_struct(mavlink_channel_t chan, const mavlink_riot_response_long_t* riot_response_long)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
-    mavlink_msg_riot_response_long_send(chan, riot_response_long->src_system, riot_response_long->src_component, riot_response_long->cmd_id, riot_response_long->data);
+    mavlink_msg_riot_response_long_send(chan, riot_response_long->cmd_id, riot_response_long->data);
 #else
     _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_RIOT_RESPONSE_LONG, (const char *)riot_response_long, MAVLINK_MSG_ID_RIOT_RESPONSE_LONG_MIN_LEN, MAVLINK_MSG_ID_RIOT_RESPONSE_LONG_LEN, MAVLINK_MSG_ID_RIOT_RESPONSE_LONG_CRC);
 #endif
@@ -194,19 +170,15 @@ static inline void mavlink_msg_riot_response_long_send_struct(mavlink_channel_t 
   is usually the receive buffer for the channel, and allows a reply to an
   incoming message with minimum stack space usage.
  */
-static inline void mavlink_msg_riot_response_long_send_buf(mavlink_message_t *msgbuf, mavlink_channel_t chan,  uint8_t src_system, uint8_t src_component, uint8_t cmd_id, const uint8_t *data)
+static inline void mavlink_msg_riot_response_long_send_buf(mavlink_message_t *msgbuf, mavlink_channel_t chan,  uint8_t cmd_id, const uint8_t *data)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
     char *buf = (char *)msgbuf;
-    _mav_put_uint8_t(buf, 0, src_system);
-    _mav_put_uint8_t(buf, 1, src_component);
-    _mav_put_uint8_t(buf, 2, cmd_id);
-    _mav_put_uint8_t_array(buf, 3, data, 128);
+    _mav_put_uint8_t(buf, 0, cmd_id);
+    _mav_put_uint8_t_array(buf, 1, data, 128);
     _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_RIOT_RESPONSE_LONG, buf, MAVLINK_MSG_ID_RIOT_RESPONSE_LONG_MIN_LEN, MAVLINK_MSG_ID_RIOT_RESPONSE_LONG_LEN, MAVLINK_MSG_ID_RIOT_RESPONSE_LONG_CRC);
 #else
     mavlink_riot_response_long_t *packet = (mavlink_riot_response_long_t *)msgbuf;
-    packet->src_system = src_system;
-    packet->src_component = src_component;
     packet->cmd_id = cmd_id;
     mav_array_memcpy(packet->data, data, sizeof(uint8_t)*128);
     _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_RIOT_RESPONSE_LONG, (const char *)packet, MAVLINK_MSG_ID_RIOT_RESPONSE_LONG_MIN_LEN, MAVLINK_MSG_ID_RIOT_RESPONSE_LONG_LEN, MAVLINK_MSG_ID_RIOT_RESPONSE_LONG_CRC);
@@ -220,33 +192,13 @@ static inline void mavlink_msg_riot_response_long_send_buf(mavlink_message_t *ms
 
 
 /**
- * @brief Get field src_system from riot_response_long message
- *
- * @return  System ID of Rapid IoT component this response is from.
- */
-static inline uint8_t mavlink_msg_riot_response_long_get_src_system(const mavlink_message_t* msg)
-{
-    return _MAV_RETURN_uint8_t(msg,  0);
-}
-
-/**
- * @brief Get field src_component from riot_response_long message
- *
- * @return  Component ID of Rapid IoT component this response is from.
- */
-static inline uint8_t mavlink_msg_riot_response_long_get_src_component(const mavlink_message_t* msg)
-{
-    return _MAV_RETURN_uint8_t(msg,  1);
-}
-
-/**
  * @brief Get field cmd_id from riot_response_long message
  *
- * @return  RIOT Command ID the response is for.
+ * @return  RIOT Long Command ID the response is for.
  */
 static inline uint8_t mavlink_msg_riot_response_long_get_cmd_id(const mavlink_message_t* msg)
 {
-    return _MAV_RETURN_uint8_t(msg,  2);
+    return _MAV_RETURN_uint8_t(msg,  0);
 }
 
 /**
@@ -256,7 +208,7 @@ static inline uint8_t mavlink_msg_riot_response_long_get_cmd_id(const mavlink_me
  */
 static inline uint16_t mavlink_msg_riot_response_long_get_data(const mavlink_message_t* msg, uint8_t *data)
 {
-    return _MAV_RETURN_uint8_t_array(msg, data, 128,  3);
+    return _MAV_RETURN_uint8_t_array(msg, data, 128,  1);
 }
 
 /**
@@ -268,8 +220,6 @@ static inline uint16_t mavlink_msg_riot_response_long_get_data(const mavlink_mes
 static inline void mavlink_msg_riot_response_long_decode(const mavlink_message_t* msg, mavlink_riot_response_long_t* riot_response_long)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
-    riot_response_long->src_system = mavlink_msg_riot_response_long_get_src_system(msg);
-    riot_response_long->src_component = mavlink_msg_riot_response_long_get_src_component(msg);
     riot_response_long->cmd_id = mavlink_msg_riot_response_long_get_cmd_id(msg);
     mavlink_msg_riot_response_long_get_data(msg, riot_response_long->data);
 #else
